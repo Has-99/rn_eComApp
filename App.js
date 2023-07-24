@@ -17,7 +17,7 @@ export default function App() {
 
   const fetchApi = async () => {
     try {
-      const res = await axios.get('http://10.21.129.213:8000/');
+      const res = await axios.get('http://192.168.8.184:8000/');
       console.log(res.data);
 
     } catch (error) {
