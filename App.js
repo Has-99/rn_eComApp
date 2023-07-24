@@ -1,26 +1,34 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from 'react';
-import { 
-  ScrollView, 
-  StyleSheet, 
-  View,
-  Animated,
-  Dimensions
- 
-} from 'react-native';
-
+import React, { useEffect, useRef } from 'react';
+import { ScrollView, StyleSheet, View, Animated, Dimensions} from 'react-native';
 import FormHeader from './app/components/FormHeader';
 import FormSelectorBtn from './app/components/FormSelectorBtn';
 import SigninForm from './app/components/SigninForm';
 import SignupForm from './app/components/SignupForm';
+import axios from 'axios';
 
-const {width} = Dimensions.get('window')
+
+const {width} = Dimensions.get('window');
 
 export default function App() {
   const animation = useRef(new Animated.Value(0)).current;
+  const scrollView = useRef();
 
-  const scrollView = useRef()
-  
+
+  const fetchApi = async () => {
+    try {
+      const res = await axios.get('http://10.21.129.213:8000/');
+      console.log(res.data);
+
+    } catch (error) {
+      console.log(error.message);
+    } 
+  };
+
+  useEffect(() => {
+    fetchApi();
+  }, []);
+
   const rightHeaderOpacity = animation.interpolate({
     inputRange: [0, width],
     outputRange: [1, 0] ,
