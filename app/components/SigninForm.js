@@ -4,6 +4,7 @@ import FormContainer from "./FormContainer";
 import FormInput from "./FormInput";
 import FormSubmitBtn from "./FormSubmitBtn";
 import { isValidEmail, isValidObjField, updateError } from "../utils/methods";
+import client from "../api/client";
 
 const SigninForm = () => {
 
@@ -29,9 +30,16 @@ const SigninForm = () => {
         return true
     }
 
-    const submitForm = () => {
+    const submitForm = async () => {
         if(isValidForm()) {
-            console.log(userInfo);
+            try {
+                const res = await client.post('/sign-in', {...userInfo});
+                console.log(res.data);
+
+            } catch (error) {
+                console.log(error.message);
+                
+            }   
         }
     }
 
