@@ -6,7 +6,7 @@ import FormSubmitBtn from "./FormSubmitBtn";
 import { isValidEmail, isValidObjField, updateError } from "../utils/methods";
 import client from "../api/client";
 
-const SigninForm = () => {
+const SigninForm = ({navigation}) => {
 
     const [userInfo, setUserInfo] = useState({
         email: '',
@@ -35,7 +35,7 @@ const SigninForm = () => {
             try {
                 const res = await client.post('/sign-in', {...userInfo});
                 console.log(res.data);
-
+                navigation.navigate('Home');
             } catch (error) {
                 console.log(error.message);
                 
