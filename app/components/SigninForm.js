@@ -35,7 +35,7 @@ const SigninForm = ({navigation}) => {
             try {
                 const res = await client.post('/sign-in', {...userInfo});
                 console.log(res.data);
-                navigation.navigate('Home');
+                navigation.navigate('Products');
             } catch (error) {
                 console.log(error.message);
                 
