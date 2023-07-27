@@ -31,6 +31,6 @@ const MyStack = () => {
     </NavigationContainer>
     </CartProvider>
   );
-};
+}
 
 export default MyStack;
