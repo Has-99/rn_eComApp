@@ -8,15 +8,15 @@ const Home = ({route, navigation}) => {
 
   const DATA = [
     
-    { name: "Pankaj", price: 130, quantity: "10" },
-    { name: "Jitender", price: 31, quantity: "12" },
-    { name: "Rahul", price: 30, quantity: "5" },
-    { name: "Aahil", price: 220, quantity: "8" },
-    { name: "Bablu", price: 35, quantity: "20" },
-    { name: "Rohan", price: 33, quantity: "30" },
-    { name: "Amit", price: 16, quantity: "25" },
-    { name: "Sunil", price: 30, quantity: "35" },
-    { name: "Juned", price: 30, quantity: "15" },
+    { name: "Kothmale Yoghurt", price: 70, quantity: 50 },
+    { name: "Nutriline Oats 500g", price: 700, quantity: 12 },
+    { name: "Kothmale Fresh milk 1l", price: 500, quantity: 15 },
+    { name: "Milo Drink 180ml", price: 130, quantity: 20 },
+    { name: "Coca cola 1l", price: 350, quantity: 20 },
+    { name: "MD tomato Sauce 200ml", price: 330, quantity: 10 },
+    { name: "Keels Chicken Sausage 210g", price: 540, quantity: 15 },
+    { name: "Araliya Rice Keeri Samba 5kg", price: 1300, quantity: 35 },
+    { name: "Dhal 1kg", price: 430, quantity: 25 },
   ];
 
   const Show_Selected_Item = (Item) => {
@@ -47,7 +47,7 @@ const Home = ({route, navigation}) => {
             <TouchableOpacity key={key} onPress={() => Show_Selected_Item(item.name)}>
               <Text style={styles.text} > Name = {item.name} </Text>
               <Text style={styles.text} > Price= {item.price} </Text>
-              <Text style={styles.text} > quantity = {item.class} </Text>
+              <Text style={styles.text} > quantity = {item.quantity} </Text>
 
               <Divider />
             </TouchableOpacity>
