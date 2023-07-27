@@ -18,7 +18,7 @@ const Start = ({navigation}) => {
 
   const fetchApi = async () => {
     try {
-      const res = await axios.get('http://10.20.130.185:8000/');
+      const res = await axios.get('http://192.168.8.184:8000/');
       console.log(res.data);
     //   navigation.navigate('Home');
 
