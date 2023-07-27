@@ -10,12 +10,10 @@ import MyStack from './app/navigator/navigator';
 
 
 
-export default function App() {
-
-  
+export default function App() { 
   
   return ( 
     <MyStack/>
   
   );
-}
+};
