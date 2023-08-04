@@ -6,6 +6,7 @@ import FormSelectorBtn from './app/components/FormSelectorBtn';
 import SigninForm from './app/components/SigninForm';
 import SignupForm from './app/components/SignupForm';
 import axios from 'axios';
+import { NavigationContainer } from '@react-navigation/native';
 import MyStack from './app/navigator/navigator';
 
 

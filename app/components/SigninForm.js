@@ -5,6 +5,7 @@ import FormInput from "./FormInput";
 import FormSubmitBtn from "./FormSubmitBtn";
 import { isValidEmail, isValidObjField, updateError } from "../utils/methods";
 import client from "../api/client";
+//import { Formik } from "formik";
 
 const SigninForm = ({navigation}) => {
 
@@ -23,9 +24,9 @@ const SigninForm = ({navigation}) => {
     const isValidForm = () => {
         if(!isValidObjField(userInfo)) return updateError('Required all fields!', setError)
 
-        if(!isValidEmail(email)) return updateError('Invalid Email!', setError)
+        if(!isValidEmail(email)) return updateError('Invalid Credentials!', setError)
 
-        if(!password.trim() || password.length < 8) return  updateError('Invalid password!', setError) 
+        if(!password.trim() || password.length < 8) return  updateError('Invalid Credentials!', setError) 
 
         return true
     }
@@ -34,9 +35,15 @@ const SigninForm = ({navigation}) => {
         if(isValidForm()) {
             try {
                 const res = await client.post('/sign-in', {...userInfo});
-                console.log(res.data);
-                navigation.navigate('Products');
-            } catch (error) {
+                //console.log(res.data);
+                if(res.data.success){
+                    setUserInfo({email:'',password:''});
+                    navigation.navigate('Home', {name: res.data.user.name, token: res.data.token});
+                    //formikActions.resetForm();
+                } else{
+                    updateError('Incorrect Credentials', setError)
+                }
+                } catch (error) {
                 console.log(error.message);
                 
             }   
