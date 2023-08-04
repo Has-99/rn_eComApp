@@ -70,6 +70,7 @@ const SignupForm = () => {
    
     const signUp = async (values, formikActions) =>{
         try{
+            // console.log(values.fullname)
         
         const res = await client.post('/create-user', {
             ...values,
@@ -77,10 +78,12 @@ const SignupForm = () => {
         console.log(res.data);
         formikActions.resetForm();
         formikActions.setSubmitting(false);  
+        console.log('here1')
         if(res.data.success){
             const res2 = await client.post('/createcart', {
-                  "owner": userInfo.fullname
-                 })
+                  "owner": "ee"
+            })
+            console.log(res2.data)
              updateMsg('Signup Successful', setMsg)
         }
             else{
