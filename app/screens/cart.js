@@ -1,96 +1,133 @@
-import React, {useEffect, useState, useContext} from "react";
-import {View, Image, Text, Button, FlatList, StyleSheet} from "react-native";
-import { CartContext } from "../../CartContext"; 
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { Alert, StyleSheet, SafeAreaView, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import client from '../api/client';
+import FormSubmitBtn from '../components/FormSubmitBtn';
 
-const Cart = ({navigation , route}) => {
-    const {items, getItemsCount, getTotalPrice} = useContext(CartContext);
+const Cart = ({route, navigation}) => {
 
-    function Totals(){
-        let [total, setTotal] = useState(0);
-        useEffect(() => {
-            setTotal(getTotalPrice())
-        })
-        return(
-            <View style={styles.cartLineTotal}>
-                <Text style={[styles.lineLeft, styles.lineTotal]}>Total</Text>
-                <Text style={styles.mainTotal}>Rs {total}</Text>
-            </View>
-        )
+  token = route.params.token;
+
+  const getData = async () => {
+    try{
+      const res = await client.post('getCart', {
+        "owner": route.params.name
+    }, {headers:{Authorization: 'JWT ' + token,}})
+      // console.log(route.params.name)
+      setData(res.data)
+      setCost(total(res.data));
+    }catch(e){
+      console.log(e.message);
     }
+  }
 
-    function renderItem({item}){
-        return(
-            <>
-                <View style={styles.cartLine}>
-                    <Image style={styles.image} source={item.product.image} />
-                    <Text style={styles.lineLeft}>{item.product.name} x {item.qty} <Text style={styles.productTotal}>Rs.{item.totalPrice}</Text></Text>
-                </View>
-            </>
-        )
+  const total = (list) => {
+    var value = 0;
+    for (key in list){
+      value += (list[key].price*list[key].quantity)
+      // console.log(list[key].price);
     }
+    return value;
+  }
 
-    return(
-        <FlatList
-            style={styles.itemsList}
-            contentContainerStyle={styles.itemsListContainer}
-            data={items}
-            renderItem={renderItem}
-            keyExtractor={(item) => item.product.id.toString()}
-            ListFooterComponent={Totals}
-        />
-    )
+  const [data, setData] = useState([])
+  const [cost, setCost] = useState(0)
 
+  const placeOrder = async () =>{
+    try{
+      const result = client.put('placeCart', {
+        "owner": route.params.name
+      }, {headers:{Authorization: 'JWT ' + token,}})
+    }catch(e){
+      console.log(e.message);
+    }
+  }
+  
+
+  useEffect(() => {
+    getData();
+  }, [data]);
+
+  const Show_Selected_Item = (Item) => {
+    Alert.alert('Remove Item?', 'Press OK to remove item from cart.', [
+      {
+        text: 'Cancel',
+        style: 'cancel',
+      },
+      {text: 'OK', onPress: () => removeItem(route.params.name, Item.product, Item.quantity)},
+    ]);
+  }
+
+  const removeItem = async (owner, item, quantity) =>{
+    try{
+      const res = await client.post('removefromcart', {
+        "owner": owner,
+        "product": item,
+        "quantity": quantity
+      }, {headers:{Authorization: 'JWT ' + token,}})
+      setData(res.data)
+      setCost(total(res.data));
+    }catch(e){
+      console.log(e.message);
+    }
+  }
+
+  const Divider = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: 'black',
+        }}
+      />
+    );
+  }
+
+  return (
+    <SafeAreaView style={styles.MainContainer}>
+      <ScrollView>
+        {
+          data.map((item, key) => (
+            <TouchableOpacity key={key} onPress={() => Show_Selected_Item(item)}>
+              <Text style={styles.product} > {item.product} </Text>
+              <Text style={styles.text} > Price: Rs.{item.price}/= </Text>
+              <Text style={styles.text} > Quantity: {item.quantity} </Text>
+              <Divider />
+            </TouchableOpacity>
+          ))
+        }
+      </ScrollView>
+      <View>
+        <Text style={{paddingVertical:10, alignSelf:'center'}}>Total Price: {cost}</Text>
+        <FormSubmitBtn title='Place Order' onPress={placeOrder}/>
+      </View>
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({
-	cartLine: {
-		flexDirection: 'row',
-		width: '80%',
-		paddingVertical: 10
-	},
-	image: {
-		width: '25%',
-		aspectRatio: 1,
-		marginRight: 5
-	},
-	cartLineTotal: {
-		flexDirection: 'row',
-		borderTopColor: '#dddddd',
-		borderTopWidth: 1
-	},
-	productTotal: {
-		fontWeight: 'bold'
-	},
-	lineTotal: {
-		fontWeight: 'bold'
-	},
-	lineLeft: {
-		fontSize: 20,
-		lineHeight: 40,
-		color: '#333333'
-	},
-	lineRight: {
-		fontSize: 20,
-		fontWeight: 'bold',
-		color: '#333333',
-		textAlign: 'left',
-	},
-	mainTotal: {
-		flex: 1,
-		fontSize: 20,
-		fontWeight: 'bold',
-		lineHeight: 40,
-		color: '#333333',
-		textAlign: 'right'
-	},
-	itemsList: {
-		backgroundColor: '#eeeeee'
-	},
-	itemsListContainer: {
-		backgroundColor: '#eeeeee',
-		paddingVertical: 8,
-		marginHorizontal: 8
-	}
+  MainContainer: {
+    flex: 1,
+    paddingTop:50,
+    paddingHorizontal:20,
+    paddingBottom:20,
+    backgroundColor:'#c9dfec'
+  },
+  product: {
+    fontSize: 32,
+    color: 'black',
+    textAlign: 'left',
+    paddingLeft: 10,
+    paddingTop: 5
+  },
+  text: {
+    fontSize: 20,
+    color: 'black',
+    textAlign: 'left',
+    paddingLeft: 10,
+    paddingTop: 5
+  }
 });
 
 export default Cart;
